@@ -21,7 +21,7 @@ export default function Footer() {
               Master the summer heat with our premium collection of essentials, skincare, and accessories.
             </p>
             
-            {/* Social Links Added Here */}
+            {/* Social Links */}
             <div className="flex space-x-5">
               <a href="#" className="text-gray-400 hover:text-orange-500 transition-all hover:-translate-y-1">
                 <span className="sr-only">Facebook</span>
@@ -68,9 +68,13 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Copyright Bar */}
-        <div className="border-t border-gray-100 pt-8 flex justify-between items-center">
+        {/* Bottom Copyright Bar & Legal Links */}
+        <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm font-medium">&copy; {new Date().getFullYear()} SunCart. All rights reserved.</p>
+          <div className="flex space-x-6">
+            <Link href="#" className="text-gray-400 hover:text-gray-900 transition-colors text-sm font-medium">Privacy Policy</Link>
+            <Link href="#" className="text-gray-400 hover:text-gray-900 transition-colors text-sm font-medium">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>
