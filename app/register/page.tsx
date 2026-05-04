@@ -32,7 +32,7 @@ export default function Register() {
       toast.error(error.message || "Registration failed. Please try again.");
     } else {
       toast.success("Registration successful! Welcome to SunCart.");
-      router.push("/");
+     window.location.href = "/login";
     }
   };
 

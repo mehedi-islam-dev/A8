@@ -27,7 +27,7 @@ export default function Login() {
       toast.error(error.message || "Invalid credentials. Please try again.");
     } else {
       toast.success("Welcome back to SunCart!");
-      router.push("/");
+     window.location.href = "/";
     }
   };
 
