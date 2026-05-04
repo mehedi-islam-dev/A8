@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌞 SunCart - Premium Summer Collection
 
-## Getting Started
+A full-stack Next.js web application built for an e-commerce summer collection. It features a complete authentication system, protected routes, a cloud database, and interactive animations.
 
-First, run the development server:
+## 🚀 Live Demo
+** https://suncart-web-app.vercel.app/ **
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+*(Note: If the Vercel link is experiencing a connection timeout, it might be due to a local ISP block in Bangladesh regarding `.vercel.app` domains. Please try using a VPN or Mobile Data to view the live site.)*
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Key Features
+* **Authentication:** Secure Login and Registration (Google OAuth & Email/Password Credentials) powered by Better-Auth.
+* **Protected Routes:** User-specific pages (like Product Details and My Profile) are fully protected and will redirect unauthorized users to the login page.
+* **Profile Management:** Logged-in users can view and securely update their profile details (Name & Avatar URL).
+* **Cloud Database:** Integrated with Neon PostgreSQL for reliable, persistent data storage on the production environment.
+* **Interactive UI:** Smooth, hydration-safe animations using DotLottie React and a fully responsive premium design built with Tailwind CSS.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Technology Stack
+* **Framework:** Next.js (App Router)
+* **Styling:** Tailwind CSS
+* **Authentication:** Better-Auth
+* **Database:** Neon (PostgreSQL)
+* **Animations:** DotLottie React
+* **Deployment:** Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 💻 Running Locally
 
-## Learn More
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/mehedi-islam-dev/A8
+   cd suncart
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Set up Environment Variables:**
+   Create a `.env` file in the root directory and add your credentials:
+   ```env
+   BETTER_AUTH_SECRET=your_secret_key
+   BETTER_AUTH_URL=http://localhost:3000
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   DATABASE_URL=your_neon_postgres_url
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Run database migrations (To create necessary tables):**
+   ```bash
+   npx @better-auth/cli migrate
+   ```
 
-## Deploy on Vercel
+5. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:3000` with your browser to see the result.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+**Developed by:**(https://github.com/mehedi-islam-dev)

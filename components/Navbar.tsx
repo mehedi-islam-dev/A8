@@ -4,9 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+import { useState } from "react"; // 👈 Notun add kora hoyeche
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false); // 👈 Mobile menu-r jonno state
 
   // Better-Auth hook
   const { data: session, isPending } = authClient.useSession();
@@ -17,13 +19,14 @@ export default function Navbar() {
       toast.error("Failed to logout. Please try again.");
     } else {
       toast.success("Logged out successfully.");
+      setIsOpen(false); // Logout korle menu bondho hoye jabe
       // Full page reload to clear cached session
       window.location.href = "/login";
     }
   };
 
   return (
-    <nav className="sticky top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 border-b border-gray-100 transition-all duration-300">
+    <nav className="sticky top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/90 border-b border-gray-100 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           
@@ -39,7 +42,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Center Links */}
+          {/* Desktop Center Links */}
           <div className="hidden md:flex space-x-10">
             <Link href="/" className={`font-semibold transition-colors text-sm tracking-wide uppercase ${pathname === "/" ? "text-orange-500" : "text-gray-600 hover:text-orange-500"}`}>
               Home
@@ -54,44 +57,105 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Auth Actions */}
+          {/* Right Side: Desktop Actions & Mobile Hamburger */}
           <div className="flex items-center space-x-4">
-            {isPending ? (
-              <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin"></div>
-            ) : session?.user ? (
-              <div className="flex items-center gap-4">
-                <Link href="/my-profile" title={session.user.name || "User"}>
-                  {/* Secure Avatar Fallback */}
+            
+            {/* Desktop View (Hidden on Mobile) */}
+            <div className="hidden md:flex items-center space-x-4">
+              {isPending ? (
+                <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin"></div>
+              ) : session?.user ? (
+                <div className="flex items-center gap-4">
+                  <Link href="/my-profile" title={session.user.name || "User"}>
+                    {session.user.image ? (
+                      <img src={session.user.image} alt="Avatar" className="w-10 h-10 rounded-full object-cover border-2 border-orange-200 hover:border-orange-500 transition-colors cursor-pointer shadow-sm"/>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-black text-lg border-2 border-orange-200 hover:border-orange-500 transition-colors cursor-pointer shadow-sm">
+                        {session.user.name ? session.user.name.charAt(0).toUpperCase() : "U"}
+                      </div>
+                    )}
+                  </Link>
+                  <button onClick={handleLogout} className="text-gray-600 hover:text-red-500 font-bold text-sm transition-all uppercase tracking-wide">
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-4">
+                  <Link href="/login" className="text-gray-600 hover:text-orange-600 font-bold text-sm transition-all uppercase tracking-wide">
+                    Login
+                  </Link>
+                  <Link href="/register" className="px-6 py-2.5 rounded-full bg-gray-900 text-white font-bold text-sm shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide">
+                    Register
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile View (Hamburger Menu Button) */}
+            <div className="md:hidden flex items-center gap-3">
+              {/* Show Avatar on mobile navbar for quick access */}
+              {session?.user && !isPending && (
+                <Link href="/my-profile">
                   {session.user.image ? (
-                    <img 
-                      src={session.user.image} 
-                      alt="Avatar" 
-                      className="w-10 h-10 rounded-full object-cover border-2 border-orange-200 hover:border-orange-500 transition-colors cursor-pointer shadow-sm"
-                    />
+                    <img src={session.user.image} alt="Avatar" className="w-8 h-8 rounded-full object-cover border-2 border-orange-200"/>
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-black text-lg border-2 border-orange-200 hover:border-orange-500 transition-colors cursor-pointer shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm border-2 border-orange-200">
                       {session.user.name ? session.user.name.charAt(0).toUpperCase() : "U"}
                     </div>
                   )}
                 </Link>
-                <button onClick={handleLogout} className="text-gray-600 hover:text-red-500 font-bold text-sm transition-all hidden sm:block uppercase tracking-wide">
-                  Logout
-                </button>
-              </div>
+              )}
+              
+              <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-orange-500 focus:outline-none p-1">
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Dropdown Menu (Slide Down) */}
+      {isOpen && (
+        <div className="md:hidden bg-white border-t border-gray-100 shadow-xl absolute w-full left-0">
+          <div className="px-4 py-4 space-y-2 flex flex-col">
+            <Link href="/" onClick={() => setIsOpen(false)} className={`block px-4 py-3 rounded-xl text-base font-bold ${pathname === "/" ? "bg-orange-50 text-orange-500" : "text-gray-700 hover:bg-gray-50"}`}>
+              Home
+            </Link>
+            <Link href="/products" onClick={() => setIsOpen(false)} className={`block px-4 py-3 rounded-xl text-base font-bold ${pathname?.startsWith("/products") ? "bg-orange-50 text-orange-500" : "text-gray-700 hover:bg-gray-50"}`}>
+              Products
+            </Link>
+            
+            {session?.user ? (
+              <>
+                <Link href="/my-profile" onClick={() => setIsOpen(false)} className={`block px-4 py-3 rounded-xl text-base font-bold ${pathname === "/my-profile" ? "bg-orange-50 text-orange-500" : "text-gray-700 hover:bg-gray-50"}`}>
+                  My Profile
+                </Link>
+                <div className="pt-2 mt-2 border-t border-gray-100">
+                  <button onClick={handleLogout} className="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-red-500 hover:bg-red-50 transition-colors">
+                    Logout
+                  </button>
+                </div>
+              </>
             ) : (
-              <div className="flex items-center space-x-4">
-                <Link href="/login" className="text-gray-600 hover:text-orange-600 font-bold text-sm transition-all hidden sm:block uppercase tracking-wide">
+              <div className="pt-2 mt-2 border-t border-gray-100 flex flex-col gap-2">
+                <Link href="/login" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-base font-bold text-center text-gray-700 bg-gray-50 hover:bg-gray-100">
                   Login
                 </Link>
-                <Link href="/register" className="px-6 py-2.5 rounded-full bg-gray-900 text-white font-bold text-sm shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all uppercase tracking-wide">
+                <Link href="/register" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-base font-bold text-center text-white bg-gray-900 hover:bg-gray-800">
                   Register
                 </Link>
               </div>
             )}
           </div>
-
         </div>
-      </div>
+      )}
     </nav>
   );
 }
