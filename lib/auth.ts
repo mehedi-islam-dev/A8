@@ -1,11 +1,10 @@
 import { betterAuth } from "better-auth";
-import Database from "better-sqlite3";
-
-// Create SQLite database connection
-const db = new Database("suncart.db");
+import { Pool } from "pg";
 
 export const auth = betterAuth({
-    database: db,
+  database: new Pool({
+    connectionString: process.env.DATABASE_URL,
+  }),
     emailAndPassword: {
         enabled: true,
     },
